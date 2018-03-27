@@ -13,7 +13,7 @@ public class Main {
 
     private static void commandLoop() {
         for (; ; ) {
-            System.out.print("cmd> ");
+            System.out.print("Choose the command (create, list, help or exit): ");
             String cmd = scanner.next();
 
             switch (cmd.toLowerCase()) {
@@ -25,10 +25,21 @@ public class Main {
                 case "list":
                     list();
                     break;
+                case "help":
+                    help();
+                    break;
                 default:
                     System.out.println("Unknown command");
             }
         }
+    }
+
+    private static void help() {
+        System.out.println("type - enter 'person'");
+        System.out.println("first name - enter your first name");
+        System.out.println("last name - enter your last name");
+        System.out.println("phone - enter your phone");
+        System.out.println("email - enter your email");
     }
 
     private static void list() {
@@ -45,6 +56,9 @@ public class Main {
             switch (type.toLowerCase()) {
                 case "exit":
                 return;
+                case "help":
+                    help();
+                    break;
                 case "person":
                     createPerson();
                     return;
@@ -59,16 +73,19 @@ public class Main {
         String firstName = askString("First name: ");
         String lastName = askString("Last name: ");
         String phone = askString("Phone: ");
+        String email = askString("Email: ");
 
         Person person = new Person();
         person.setFirstName(firstName);
         person.setLastName(lastName);
         person.setPhone(phone);
+        person.setEmail(email);
 
         records.add(person);
     }
     private static String askString(String message){
         System.out.print(message);
+
         return scanner.next();
     }
 }

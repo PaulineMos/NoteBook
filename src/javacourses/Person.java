@@ -6,11 +6,21 @@ public class Person {
     private String firstName;
     private String lastName;
     private String phone;
+    private String email;
 
-    public Person(){
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Person() {
         counter++;
         id = counter;
     }
+
     public int getId() {
         return id;
     }
@@ -46,6 +56,7 @@ public class Person {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
                 '}';
     }
 }
