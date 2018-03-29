@@ -57,11 +57,9 @@ public class Main {
         for (Record r : records) {
             if (r.contains(part)) {
                 System.out.println(r);
-            } else {
-                System.out.println("Nothing found!");
+            }
             }
         }
-    }
 
     private static void create() {
         for (; ; ) {

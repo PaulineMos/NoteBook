@@ -17,6 +17,7 @@ public class Alarm extends Record {
     @Override
     public String toString() {
         return "Alarm{" +
+                "id=" + getId() + '\'' +
                 "time='" + time + '\'' +
                 '}';
     }
@@ -30,6 +31,6 @@ public class Alarm extends Record {
 
     @Override
     public boolean contains(String part) {
-        return false;
+        return time.contains(part);
     }
 }
