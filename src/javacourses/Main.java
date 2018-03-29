@@ -13,7 +13,7 @@ public class Main {
 
     private static void commandLoop() {
         for (; ; ) {
-            System.out.print("Choose the command (create, list, help or exit): ");
+            System.out.print("Choose the command (create, list, help, find or exit): ");
             String cmd = scanner.next();
 
             switch (cmd.toLowerCase()) {
@@ -28,12 +28,15 @@ public class Main {
                 case "help":
                     help();
                     break;
-
+                case "find":
+                    find();
+                    break;
                 default:
                     System.out.println("Unknown command");
             }
         }
     }
+
     private static void help() {
         System.out.println("type - enter 'person'");
         System.out.println("first name - enter your first name");
@@ -46,18 +49,23 @@ public class Main {
         for (Record r : records) {
             System.out.println(r);
         }
-    } private static void find() {
+    }
+
+    private static void find() {
         String part = askString("What to find? ");
 
         for (Record r : records) {
-            if (r.contains(part))
-            System.out.println(r);
+            if (r.contains(part)) {
+                System.out.println(r);
+            } else {
+                System.out.println("Nothing found!");
+            }
         }
     }
 
     private static void create() {
         for (; ; ) {
-            System.out.print("type> ");
+            System.out.print("type: ");
             String type = scanner.next();
 
             switch (type.toLowerCase()) {
@@ -70,7 +78,10 @@ public class Main {
                     addRecord(new Person());
                     return;
                 case "note":
-                   addRecord(new Note());
+                    addRecord(new Note());
+                    return;
+                case "alarm":
+                    addRecord(new Alarm());
                     return;
                 default:
                     System.out.println("Wrong");
