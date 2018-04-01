@@ -75,6 +75,5 @@ public class Person extends Record {
                 || lastName.contains(part)
                 || phone.contains(part)
                 || email.contains(part);
-
     }
 }
