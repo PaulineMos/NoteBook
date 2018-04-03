@@ -1,5 +1,9 @@
 package javacourses;
 
+import org.omg.PortableInterceptor.LOCATION_FORWARD;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -31,8 +35,31 @@ public class Main {
                 case "find":
                     find();
                     break;
+                case "expired":
+                    findExpired();
+                    break;
                 default:
                     System.out.println("Unknown command");
+            }
+        }
+    }
+
+    private static void findExpired() {
+        LocalTime now = LocalTime.now();
+        LocalDateTime nowDT = LocalDateTime.now();
+        for (Record r : records){
+            if (r instanceof Alarm && !(r instanceof Reminder)){
+                Alarm a = (Alarm) r;
+                if (a.getTime().isBefore(now)){
+                    System.out.println(a);
+                }
+            }
+            if (r instanceof Reminder){
+                Reminder rem = (Reminder) r;
+                LocalDateTime dt = rem.getDate().atTime(rem.getTime());
+                if (dt.isBefore(nowDT)){
+                    System.out.println(rem);
+                }
             }
         }
     }
@@ -54,12 +81,18 @@ public class Main {
     private static void find() {
         String part = askString("What to find? ");
 
+        boolean isfound = false;
         for (Record r : records) {
             if (r.contains(part)) {
                 System.out.println(r);
-            }
+                isfound = true;
             }
         }
+        if (!isfound){
+            System.out.println("Not found!");
+        }
+
+    }
 
     private static void create() {
         for (; ; ) {
@@ -80,6 +113,9 @@ public class Main {
                     return;
                 case "alarm":
                     addRecord(new Alarm());
+                    return;
+                case "reminder":
+                    addRecord(new Reminder());
                     return;
                 default:
                     System.out.println("Wrong");

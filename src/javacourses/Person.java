@@ -65,8 +65,6 @@ public class Person extends Record {
         setLastName(lastName);
         setPhone(phone);
         setEmail(email);
-
-
     }
 
     @Override
