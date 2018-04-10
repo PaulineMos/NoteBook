@@ -1,14 +1,13 @@
 package javacourses;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.SplittableRandom;
 
-public class Alarm extends Note {
-    public static final String TIME_FORMAT = "HH:mm";
-    public static final DateTimeFormatter TIME_FORMATTER
-            = DateTimeFormatter.ofPattern(TIME_FORMAT);
+public class Alarm extends Note implements Expirable {
+
 
     private LocalTime time;
 
@@ -33,24 +32,21 @@ public class Alarm extends Note {
     public void askUserData() {
 
         super.askUserData();
-        for (; ; ) {
-            try {
-                String strTime = Main.askString("Time (" + TIME_FORMAT + "): ");
-                LocalTime time = LocalTime.parse(strTime, TIME_FORMATTER);
+                LocalTime time = Main.askTime("Enter time: ");
                 setTime(time);
-                return;
-            } catch (DateTimeParseException e) {
-                System.out.println("Incorrect format!");
-
             }
-        }
-    }
 
 
     @Override
     public boolean contains(String part) {
-        String strTime = TIME_FORMATTER.format(time);
+        String strTime = Main.TIME_FORMATTER.format(time);
         return strTime.contains(part)
                 || super.contains(part);
+    }
+
+    @Override
+    public boolean isExpired() {
+        LocalTime now = LocalTime.now();
+        return time.isBefore(now);
     }
 }

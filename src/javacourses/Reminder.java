@@ -1,14 +1,11 @@
 package javacourses;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class Reminder extends Alarm{
-    public static final String DATE_FORMAT = "dd.MM.uuuu";
-    public static final DateTimeFormatter DATE_FORMATTER
-            =DateTimeFormatter.ofPattern(DATE_FORMAT);
-
+public class Reminder extends Alarm implements Expirable{
     private LocalDate date;
 
     public LocalDate getDate() {
@@ -20,23 +17,22 @@ public class Reminder extends Alarm{
     }
 
     @Override
+    public boolean isExpired() {
+        LocalDateTime nowDT = LocalDateTime.now();
+        LocalDateTime dt = getDate().atTime(getTime());
+        return dt.isBefore(nowDT);
+    }
+
+    @Override
     public void askUserData() {
             super.askUserData();
-            for (; ; ) {
-                try {
-                    String strDate = Main.askString("Date (" + DATE_FORMAT + "): ");
-                    LocalDate date = LocalDate.parse(strDate, DATE_FORMATTER);
-                    setDate(date);
-                    return;
-                } catch (DateTimeParseException e) {
-                    System.out.println("Incorrect format!");
-                }
-            }
+            LocalDate date = Main.askDate("Enter date: ");
+            setDate(date);
     }
 
     @Override
     public String toString() {
-        String strDate = DATE_FORMATTER.format(date);
+        String strDate = Main.DATE_FORMATTER.format(date);
         return "Reminder{" +
                 "id=" + getId() + '\'' +
                 ", time='" + getTime() + '\'' +
@@ -47,7 +43,7 @@ public class Reminder extends Alarm{
 
     @Override
     public boolean contains(String part) {
-        String strDate = DATE_FORMATTER.format(date);
+        String strDate = Main.DATE_FORMATTER.format(date);
         return strDate.contains(part)
               ||  super.contains(part);
     }

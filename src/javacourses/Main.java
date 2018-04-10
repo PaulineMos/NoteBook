@@ -1,16 +1,25 @@
 package javacourses;
 
 import org.omg.PortableInterceptor.LOCATION_FORWARD;
+import sun.reflect.generics.tree.Tree;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 
 public class Main {
+    public static final String DATE_FORMAT = "dd.MM.uuuu";
+    public static final DateTimeFormatter DATE_FORMATTER
+            = DateTimeFormatter.ofPattern(DATE_FORMAT);
+    public static final String TIME_FORMAT = "HH:mm";
+    public static final DateTimeFormatter TIME_FORMATTER
+            = DateTimeFormatter.ofPattern(TIME_FORMAT);
+
     static Scanner scanner = new Scanner(System.in);
-    static ArrayList<Record> records = new ArrayList<>();
+    static TreeMap<Integer, Record> recordsMap = new TreeMap<>();
 
     public static void main(String[] args) {
         commandLoop();
@@ -49,37 +58,28 @@ public class Main {
     }
 
     private static void showID() {
+        for (; ; ) {
+            try {
+                System.out.print("Show ID: ");
+                int id = scanner.nextInt();
+                Record r = recordsMap.get(id);
+                System.out.println(r);
+                return;
 
-        try {
-            System.out.print("Show ID: ");
-            int num = scanner.nextInt();
-
-            for (Record r : records) {
-                if (r.getId() == num) {
-                    System.out.println(r);
-                }
+            } catch (InputMismatchException e) {
+                scanner.next();
+                System.out.println("Enter number of ID!");
             }
-        } catch (InputMismatchException e) {
-            scanner.next();
-            System.out.println("Enter number of ID!");
         }
     }
 
     private static void findExpired() {
-        LocalTime now = LocalTime.now();
-        LocalDateTime nowDT = LocalDateTime.now();
-        for (Record r : records) {
-            if (r instanceof Alarm && !(r instanceof Reminder)) {
-                Alarm a = (Alarm) r;
-                if (a.getTime().isBefore(now)) {
-                    System.out.println(a);
-                }
-            }
-            if (r instanceof Reminder) {
-                Reminder rem = (Reminder) r;
-                LocalDateTime dt = rem.getDate().atTime(rem.getTime());
-                if (dt.isBefore(nowDT)) {
-                    System.out.println(rem);
+
+        for (Record r : recordsMap.values()) {
+            if (r instanceof Expirable) {
+                Expirable expirable = (Expirable) r;
+                if (expirable.isExpired()) {
+                    System.out.println(expirable);
                 }
             }
         }
@@ -90,7 +90,7 @@ public class Main {
     }
 
     private static void list() {
-        for (Record r : records) {
+        for (Record r : recordsMap.values()) {
             System.out.println(r);
         }
     }
@@ -99,7 +99,7 @@ public class Main {
         String part = askString("What to find? ");
 
         boolean isfound = false;
-        for (Record r : records) {
+        for (Record r : recordsMap.values()) {
             if (r.contains(part)) {
                 System.out.println(r);
                 isfound = true;
@@ -142,7 +142,8 @@ public class Main {
 
     private static void addRecord(Record record) {
         record.askUserData();
-        records.add(record);
+        int id = record.getId();
+        recordsMap.put(id, record);
         System.out.println("Created!");
     }
 
@@ -159,5 +160,29 @@ public class Main {
             str = String.join(" ", list);
         }
         return str;
+    }
+
+    public static LocalTime askTime(String message) {
+        for (; ; ) {
+            String strTime = askString(message + "(" + TIME_FORMAT + ") ");
+            try {
+                LocalTime time = LocalTime.parse(strTime, TIME_FORMATTER);
+                return time;
+            } catch (DateTimeParseException e) {
+                System.out.println("Incorrect format!");
+            }
+        }
+    }
+
+    public static LocalDate askDate(String message) {
+        for (; ; ) {
+            String strDate = askString(message + "(" + DATE_FORMAT + ") ");
+            try {
+                LocalDate date = LocalDate.parse(strDate, DATE_FORMATTER);
+                return date;
+            } catch (DateTimeParseException e) {
+                System.out.println("Incorrect format!");
+            }
+        }
     }
 }
