@@ -2,12 +2,13 @@ package javacourses;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.SplittableRandom;
 
 public class Alarm extends Note {
     public static final String TIME_FORMAT = "HH:mm";
     public static final DateTimeFormatter TIME_FORMATTER
-            =DateTimeFormatter.ofPattern(TIME_FORMAT);
+            = DateTimeFormatter.ofPattern(TIME_FORMAT);
 
     private LocalTime time;
 
@@ -30,11 +31,21 @@ public class Alarm extends Note {
 
     @Override
     public void askUserData() {
+
         super.askUserData();
-        String strTime = Main.askString("Time (" + TIME_FORMAT + "): ");
-        LocalTime time = LocalTime.parse(strTime, TIME_FORMATTER);
-        setTime(time);
+        for (; ; ) {
+            try {
+                String strTime = Main.askString("Time (" + TIME_FORMAT + "): ");
+                LocalTime time = LocalTime.parse(strTime, TIME_FORMATTER);
+                setTime(time);
+                return;
+            } catch (DateTimeParseException e) {
+                System.out.println("Incorrect format!");
+
+            }
+        }
     }
+
 
     @Override
     public boolean contains(String part) {

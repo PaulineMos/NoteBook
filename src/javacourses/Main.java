@@ -5,6 +5,7 @@ import org.omg.PortableInterceptor.LOCATION_FORWARD;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -17,7 +18,7 @@ public class Main {
 
     private static void commandLoop() {
         for (; ; ) {
-            System.out.print("Choose the command (create, list, help, find or exit): ");
+            System.out.print("Choose the command (create, list, help, find, expired, show or exit): ");
             String cmd = scanner.next();
 
             switch (cmd.toLowerCase()) {
@@ -38,26 +39,46 @@ public class Main {
                 case "expired":
                     findExpired();
                     break;
+                case "show":
+                    showID();
+                    break;
                 default:
                     System.out.println("Unknown command");
             }
         }
     }
 
+    private static void showID() {
+
+        try {
+            System.out.print("Show ID: ");
+            int num = scanner.nextInt();
+
+            for (Record r : records) {
+                if (r.getId() == num) {
+                    System.out.println(r);
+                }
+            }
+        } catch (InputMismatchException e) {
+            scanner.next();
+            System.out.println("Enter number of ID!");
+        }
+    }
+
     private static void findExpired() {
         LocalTime now = LocalTime.now();
         LocalDateTime nowDT = LocalDateTime.now();
-        for (Record r : records){
-            if (r instanceof Alarm && !(r instanceof Reminder)){
+        for (Record r : records) {
+            if (r instanceof Alarm && !(r instanceof Reminder)) {
                 Alarm a = (Alarm) r;
-                if (a.getTime().isBefore(now)){
+                if (a.getTime().isBefore(now)) {
                     System.out.println(a);
                 }
             }
-            if (r instanceof Reminder){
+            if (r instanceof Reminder) {
                 Reminder rem = (Reminder) r;
                 LocalDateTime dt = rem.getDate().atTime(rem.getTime());
-                if (dt.isBefore(nowDT)){
+                if (dt.isBefore(nowDT)) {
                     System.out.println(rem);
                 }
             }
@@ -66,10 +87,6 @@ public class Main {
 
     private static void help() {
         System.out.println("type - enter 'person'");
-        System.out.println("first name - enter your first name");
-        System.out.println("last name - enter your last name");
-        System.out.println("phone - enter your phone");
-        System.out.println("email - enter your email");
     }
 
     private static void list() {
@@ -88,7 +105,7 @@ public class Main {
                 isfound = true;
             }
         }
-        if (!isfound){
+        if (!isfound) {
             System.out.println("Not found!");
         }
 

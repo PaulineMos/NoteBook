@@ -2,6 +2,7 @@ package javacourses;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class Reminder extends Alarm{
     public static final String DATE_FORMAT = "dd.MM.uuuu";
@@ -20,10 +21,17 @@ public class Reminder extends Alarm{
 
     @Override
     public void askUserData() {
-        super.askUserData();
-        String strDate = Main.askString("Date (" + DATE_FORMAT + "): ");
-        LocalDate date = LocalDate.parse(strDate, DATE_FORMATTER);
-        setDate(date);
+            super.askUserData();
+            for (; ; ) {
+                try {
+                    String strDate = Main.askString("Date (" + DATE_FORMAT + "): ");
+                    LocalDate date = LocalDate.parse(strDate, DATE_FORMATTER);
+                    setDate(date);
+                    return;
+                } catch (DateTimeParseException e) {
+                    System.out.println("Incorrect format!");
+                }
+            }
     }
 
     @Override
