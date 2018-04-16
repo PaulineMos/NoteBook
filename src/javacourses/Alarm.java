@@ -32,9 +32,9 @@ public class Alarm extends Note implements Expirable {
     public void askUserData() {
 
         super.askUserData();
-                LocalTime time = Main.askTime("Enter time: ");
-                setTime(time);
-            }
+        LocalTime time = Main.askTime("Enter time: ");
+        setTime(time);
+    }
 
 
     @Override

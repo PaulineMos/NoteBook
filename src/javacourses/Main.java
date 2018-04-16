@@ -1,7 +1,6 @@
 package javacourses;
 
 import org.omg.PortableInterceptor.LOCATION_FORWARD;
-import sun.reflect.generics.tree.Tree;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -45,6 +44,9 @@ public class Main {
                 case "find":
                     find();
                     break;
+                case "birthdays":
+                    findBirthdayInCurrentMonth();
+                    break;
                 case "expired":
                     findExpired();
                     break;
@@ -85,8 +87,24 @@ public class Main {
         }
     }
 
+    private static void findBirthdayInCurrentMonth() {
+        String month = askString("Enter a month(MM)? ");
+        boolean isBirthdays = false;
+        for (Record r : recordsMap.values()) {
+            if (r instanceof RecordWithBirthday) {
+                RecordWithBirthday recordWithBirthday = (RecordWithBirthday) r;
+                if (recordWithBirthday.isBirthdayInCurrentMonth(month)) {
+                    System.out.println(recordWithBirthday);
+                    isBirthdays = true;
+                }
+            }
+        } if (!isBirthdays) {
+            System.out.println("Not found such birthdays!");
+        }
+    }
+
     private static void help() {
-        System.out.println("type - enter 'person'");
+        System.out.println("type - enter 'person', 'note', 'pet', 'alarm', 'reminder' ");
     }
 
     private static void list() {
@@ -124,6 +142,9 @@ public class Main {
                     break;
                 case "person":
                     addRecord(new Person());
+                    return;
+                case "pet":
+                    addRecord(new Pet());
                     return;
                 case "note":
                     addRecord(new Note());

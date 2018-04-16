@@ -1,6 +1,8 @@
 package javacourses;
 
-public class Person extends Record {
+import java.time.LocalDate;
+
+public class Person extends RecordWithBirthday {
 
     private String firstName;
     private String lastName;
@@ -14,7 +16,6 @@ public class Person extends Record {
     public void setEmail(String email) {
         this.email = email;
     }
-
 
 
     public String getFirstName() {
@@ -49,6 +50,7 @@ public class Person extends Record {
                 ", lastName='" + lastName + '\'' +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
+                ", birthday='" + super.getBirthday() + '\'' +
                 '}';
     }
 
@@ -59,17 +61,21 @@ public class Person extends Record {
         String lastName = Main.askString("Last name: ");
         String phone = Main.askString("Phone: ");
         String email = Main.askString("Email: ");
+        LocalDate birthday = super.askBirthday();
 
 
         setFirstName(firstName);
         setLastName(lastName);
         setPhone(phone);
         setEmail(email);
+        super.setBirthday(birthday);
     }
 
     @Override
     public boolean contains(String part) {
-        return firstName.contains(part)
+        String strDate = Main.DATE_FORMATTER.format(super.getBirthday());
+        return strDate.contains(part)
+                || firstName.contains(part)
                 || lastName.contains(part)
                 || phone.contains(part)
                 || email.contains(part);
